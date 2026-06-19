@@ -1,0 +1,50 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using product_service_api.Model;
+using product_service_api.Service;
+
+namespace product_service_api.Controllers;
+
+[ApiController]
+[Route("products")]
+public class ProductController : ControllerBase
+{
+    private readonly IProductService _service;
+
+    public ProductController(IProductService service)
+    {
+        _service = service;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        return Ok(await _service.FindAllAsync());
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var product = await _service.FindByIdAsync(id);
+
+        if (product == null)
+            return NotFound();
+
+        return Ok(product);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Product product)
+    {
+        var created = await _service.CreateAsync(product);
+
+        return Created($"/products/{created.Id}", created);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _service.DeleteAsync(id);
+
+        return NoContent();
+    }
+}
