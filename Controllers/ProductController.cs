@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using product_service_api.DTO;
 using product_service_api.Model;
 using product_service_api.Service;
 
@@ -33,7 +34,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Product product)
+    public async Task<IActionResult> Create(CreateProduct product)
     {
         var created = await _service.CreateAsync(product);
 

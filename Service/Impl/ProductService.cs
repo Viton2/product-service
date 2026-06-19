@@ -23,9 +23,13 @@ public class ProductService : IProductService
         return ConvertProductModelToDto(await _repository.FindByIdAsync(id));
     }
 
-    public async Task<Product> CreateAsync(Product product)
+    public async Task<Product> CreateAsync(CreateProduct productRequest)
     {
-        product.Id = Guid.NewGuid();
+        Product product = new(productRequest);
+        // product.Id = Guid.NewGuid();
+        // product.Name = productRequest.Name;
+        // product.Price = productRequest.Price;
+        // product.Description = productRequest.Description;
 
         return await _repository.SaveAsync(product);
     }
