@@ -1,4 +1,5 @@
-﻿using product_service_api.Model;
+﻿using product_service_api.DTO;
+using product_service_api.Model;
 using product_service_api.Repository;
 
 namespace product_service_api.Service.Impl;
@@ -17,9 +18,9 @@ public class ProductService : IProductService
         return await _repository.FindAllAsync();
     }
 
-    public async Task<Product?> FindByIdAsync(Guid id)
+    public async Task<ProductDTO?> FindByIdAsync(Guid id)
     {
-        return await _repository.FindByIdAsync(id);
+        return ConvertProductModelToDto(await _repository.FindByIdAsync(id));
     }
 
     public async Task<Product> CreateAsync(Product product)
@@ -27,6 +28,20 @@ public class ProductService : IProductService
         product.Id = Guid.NewGuid();
 
         return await _repository.SaveAsync(product);
+    }
+    
+    public async Task<Product> UpdateAsync(Guid id, Product product)
+    {
+        var existingProduct = await _repository.FindByIdAsync(id);
+
+        if (existingProduct == null)
+            throw new Exception("Product not found");
+
+        existingProduct.Name = product.Name;
+        existingProduct.Price = product.Price;
+        existingProduct.Description = product.Description;
+
+        return await _repository.UpdateAsync(existingProduct);
     }
 
     public async Task DeleteAsync(Guid id)
@@ -37,5 +52,19 @@ public class ProductService : IProductService
             throw new Exception("Product not found");
 
         await _repository.DeleteAsync(product);
+    }
+
+    private static ProductDTO ConvertProductModelToDto(Product product)
+    {
+        if (product == null)
+        {
+            throw new Exception("Product not found");
+        }
+        ProductDTO dto = new(product);
+        // dto.Id = product.Id;
+        // dto.Name = product.Name;
+        // dto.Price = product.Price;
+        // dto.Description = product.Description;
+        return dto;
     }
 }

@@ -40,6 +40,13 @@ public class ProductController : ControllerBase
         return Created($"/products/{created.Id}", created);
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid id, Product product)
+    {
+        var updated = await _service.UpdateAsync(id, product);
+        return Ok(updated);
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
