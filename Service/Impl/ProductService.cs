@@ -1,4 +1,5 @@
-﻿using product_service_api.DTO;
+﻿using AutoMapper;
+using product_service_api.DTO;
 using product_service_api.Model;
 using product_service_api.Repository;
 
@@ -7,15 +8,19 @@ namespace product_service_api.Service.Impl;
 public class ProductService : IProductService
 {
     private readonly IProductRepository _repository;
+    private readonly IMapper _mapper;
 
-    public ProductService(IProductRepository repository)
+    public ProductService(IProductRepository repository,  IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
-    public async Task<List<Product>> FindAllAsync()
+    public async Task<List<ProductDTO>> FindAllAsync()
     {
-        return await _repository.FindAllAsync();
+        var products = await _repository.FindAllAsync();
+
+        return products.Select(ConvertProductModelToDto).ToList();
     }
 
     public async Task<ProductDTO?> FindByIdAsync(Guid id)
@@ -23,15 +28,10 @@ public class ProductService : IProductService
         return ConvertProductModelToDto(await _repository.FindByIdAsync(id));
     }
 
-    public async Task<Product> CreateAsync(CreateProduct productRequest)
+    public async Task<ProductDTO> CreateAsync(CreateProduct productRequest)
     {
         Product product = new(productRequest);
-        // product.Id = Guid.NewGuid();
-        // product.Name = productRequest.Name;
-        // product.Price = productRequest.Price;
-        // product.Description = productRequest.Description;
-
-        return await _repository.SaveAsync(product);
+        return ConvertProductModelToDto(product);
     }
     
     public async Task<Product> UpdateAsync(Guid id, Product product)
@@ -58,17 +58,15 @@ public class ProductService : IProductService
         await _repository.DeleteAsync(product);
     }
 
-    private static ProductDTO ConvertProductModelToDto(Product product)
+    private ProductDTO ConvertProductModelToDto(Product product)
     {
-        if (product == null)
-        {
-            throw new Exception("Product not found");
-        }
-        ProductDTO dto = new(product);
-        // dto.Id = product.Id;
-        // dto.Name = product.Name;
-        // dto.Price = product.Price;
-        // dto.Description = product.Description;
-        return dto;
+        // if (product == null)
+        // {
+        //     throw new Exception("Product not found");
+        // }
+        
+        // ProductDTO dto = new(product);
+        // return dto;
+        return product == null ? throw new Exception("Produto nulo") : _mapper.Map<ProductDTO>(product);
     }
 }

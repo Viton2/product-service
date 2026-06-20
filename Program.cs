@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using product_service_api.Data;
+using product_service_api.Mapping;
 using product_service_api.Repository;
 using product_service_api.Service;
 using product_service_api.Service.Impl;
@@ -22,6 +23,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddAutoMapper(
+    typeof(ProductProfile));
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
