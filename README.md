@@ -1,7 +1,5 @@
 # Product Service API
 
----
-
 REST API for product management built with ASP.NET Core 8, Entity Framework Core, SQL Server, and Keycloak.
 
 ## Features
@@ -39,8 +37,6 @@ REST API for product management built with ASP.NET Core 8, Entity Framework Core
 
 ## Local Development Setup
 
----
-
 ### Start Infrastructure
 
 ```bash
@@ -76,8 +72,6 @@ keycloak
 | URL | http://localhost:8080 |
 | Admin User | admin |
 | Admin Password | admin123 |
-
----
 
 The application requires the following environment variable:
 
@@ -132,8 +126,6 @@ http://localhost:{PORT}/swagger
 ```
 
 ## Authentication & Authorization
-
----
 
 Authentication and authorization are handled through Keycloak using JWT Bearer tokens.
 
