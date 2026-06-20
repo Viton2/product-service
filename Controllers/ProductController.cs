@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using product_service_api.DTO;
 using product_service_api.Model;
 using product_service_api.Service;
@@ -34,6 +35,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create(CreateProduct product)
     {
         var created = await _service.CreateAsync(product);
@@ -42,6 +44,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize]
     public async Task<IActionResult> Update(Guid id, Product product)
     {
         var updated = await _service.UpdateAsync(id, product);
@@ -49,6 +52,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _service.DeleteAsync(id);
