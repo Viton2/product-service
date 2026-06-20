@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using product_service_api.DTO;
+using product_service_api.Exceptions;
 using product_service_api.Model;
 using product_service_api.Repository;
 
@@ -60,13 +61,6 @@ public class ProductService : IProductService
 
     private ProductDTO ConvertProductModelToDto(Product product)
     {
-        // if (product == null)
-        // {
-        //     throw new Exception("Product not found");
-        // }
-        
-        // ProductDTO dto = new(product);
-        // return dto;
-        return product == null ? throw new Exception("Produto nulo") : _mapper.Map<ProductDTO>(product);
+        return product == null ? throw new NotFoundException($"Produto não encontrado") : _mapper.Map<ProductDTO>(product);
     }
 }
